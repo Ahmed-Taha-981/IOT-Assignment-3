@@ -20,20 +20,19 @@ x_train, y_train = x[:600], y[:600]
 x_val,   y_val   = x[600:800], y[600:800]
 x_test,  y_test  = x[800:], y[800:]
 
-# 2. Model Definition
+# 2. Model Definition - exact spec: Dense(16)->Dense(16)->Dense(1)
 model = keras.Sequential([
-    keras.layers.Dense(32, activation='relu', input_shape=(1,)),
-    keras.layers.Dense(32, activation='relu'),
+    keras.layers.Dense(16, activation='relu', input_shape=(1,)),
     keras.layers.Dense(16, activation='relu'),
     keras.layers.Dense(1)
 ])
-model.compile(optimizer=keras.optimizers.Adam(learning_rate=0.001), loss='mse')
+model.compile(optimizer='adam', loss='mse')
 model.summary()
 
-# 3. Training
+# 3. Training - 200 epochs as per spec
 history = model.fit(
     x_train, y_train,
-    epochs=500,
+    epochs=200,
     batch_size=32,
     validation_data=(x_val, y_val),
     verbose=1
@@ -52,12 +51,15 @@ plt.close()
 print("Loss curve saved.")
 
 # 5. Evaluation
-mse, = model.evaluate(x_test, y_test, verbose=0), 
 y_pred = model.predict(x_test, verbose=0).flatten()
-mae = np.mean(np.abs(y_pred - y_test))
-mse_val = np.mean((y_pred - y_test) ** 2)
+mae = float(np.mean(np.abs(y_pred - y_test)))
+mse_val = float(np.mean((y_pred - y_test) ** 2))
 print(f"Test MSE: {mse_val:.4f}")
 print(f"Test MAE: {mae:.4f}")
+
+y_clean = np.cos(x_test)
+mae_vs_cos = float(np.mean(np.abs(y_pred - y_clean)))
+print(f"Test MAE vs cos(x) (no noise): {mae_vs_cos:.4f}")
 
 # 6. Prediction Plot
 x_dense = np.linspace(0, 2 * np.pi, 500)
