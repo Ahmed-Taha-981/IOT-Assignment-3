@@ -1,0 +1,10 @@
+cosine_float.tflite bytes: 9060
+cosine_int8.tflite bytes: 6608
+size_reduction_percent: 27.06
+float_tflite_test_mae: 0.080933
+int8_tflite_test_mae: 0.082377
+int8_tflite_test_mse: 0.010342
+input_scale: 0.024326426908373833
+input_zero_point: -128
+output_scale: 0.007866141386330128
+output_zero_point: -2
